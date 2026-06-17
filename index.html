@@ -86,10 +86,29 @@
   footer{text-align:center; font-size:.7rem; color:var(--brown); margin-top:16px; padding-top:14px; border-top:2px solid var(--yellow)}
   footer i{color:var(--orange)}
 
-  .nav{display:flex;gap:6px;margin-bottom:16px}
+  .nav{display:flex;gap:5px;margin-bottom:16px}
   .nav button{flex:1;border:none;background:#fff;border:2px solid var(--line);color:var(--brown);
-    border-radius:11px;padding:9px 2px;cursor:pointer;font-weight:700;font-size:.74rem;font-family:inherit;transition:all .15s}
+    border-radius:10px;padding:8px 1px;cursor:pointer;font-weight:700;font-size:.66rem;font-family:inherit;transition:all .15s}
   .nav button.active{background:var(--brown);color:#fff;border-color:var(--brown)}
+  .jtoday{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:18px}
+  .jdate{font-size:.78rem;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+  .jfield{margin-bottom:14px}
+  .jfield:last-child{margin-bottom:0}
+  .jfield label{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--brown);font-weight:700;margin-bottom:6px}
+  .jfield textarea{width:100%;min-height:64px;border:1px solid var(--line);border-radius:8px;padding:9px;
+    font-family:inherit;font-size:.9rem;color:var(--ink);resize:vertical;background:var(--cream);line-height:1.45}
+  .jsaved{font-size:.7rem;color:var(--teal);font-style:italic;margin-top:5px;min-height:1em}
+  .jhist-title{font-size:.92rem;font-weight:700;color:var(--brown);margin:4px 0 10px}
+  .jday{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:9px;overflow:hidden}
+  .jday-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;user-select:none}
+  .jday-hdr .dt{font-weight:700;color:var(--brown);font-size:.88rem}
+  .jday-hdr .pk{font-size:.76rem;color:#7a6a55;max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .jday-body{padding:0 14px 14px;display:none}
+  .jday.open .jday-body{display:block}
+  .jday-sec{margin-top:8px}
+  .jday-sec .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--orange);font-weight:700;margin-bottom:3px}
+  .jday-sec .txt{font-size:.86rem;color:var(--ink);line-height:1.45;white-space:pre-wrap}
+  .jempty{font-size:.85rem;color:#7a6a55;font-style:italic;text-align:center;padding:18px}
   .tr-today{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
   .tr-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
   .tr-wk{font-size:.78rem;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em}
@@ -164,6 +183,7 @@
 <div class="nav" id="nav">
   <button data-view="home" class="active">Today</button>
   <button data-view="training">Training</button>
+  <button data-view="journal">Journal</button>
   <button data-view="progress">Progress</button>
   <button data-view="docs">My Plan Docs</button>
 </div>
@@ -201,6 +221,9 @@
 </div>
 <div id="trainingView" style="display:none">
   <div id="trainWrap"></div>
+</div>
+<div id="journalView" style="display:none">
+  <div id="journalWrap"></div>
 </div>
 <div id="progressView" style="display:none">
   <div id="ganttWrap"></div>
@@ -658,15 +681,69 @@
     return h;
   }
 
+  function jKey(){ return "littlebig_journal"; }
+  function loadJournal(){ try{ return JSON.parse(localStorage.getItem(jKey())||"{}"); }catch(e){ return {}; } }
+  function saveJournal(obj){ try{ localStorage.setItem(jKey(), JSON.stringify(obj)); }catch(e){} }
+  function prettyDate(iso){
+    const [y,m,d]=iso.split("-").map(Number);
+    const dt=new Date(y,m-1,d);
+    return dt.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+  }
+  function renderJournal(){
+    const wrap=document.getElementById('journalWrap');
+    const J=loadJournal();
+    const today=isoToday();
+    const cur=J[today]||{plan:"",recap:""};
+    let html='';
+    html+='<div class="jtoday"><div class="jdate">Today &middot; '+prettyDate(today)+'</div>';
+    html+='<div class="jfield"><label>Morning &mdash; plan the day</label>'+
+      '<textarea id="jPlan" placeholder="What matters today? What\u2019s the plan...">'+
+      (cur.plan||"").replace(/</g,"&lt;")+'</textarea><div class="jsaved" id="jPlanSaved"></div></div>';
+    html+='<div class="jfield"><label>Evening &mdash; recap</label>'+
+      '<textarea id="jRecap" placeholder="What actually happened? Wins, misses, notes for tomorrow...">'+
+      (cur.recap||"").replace(/</g,"&lt;")+'</textarea><div class="jsaved" id="jRecapSaved"></div></div>';
+    html+='</div>';
+    // history (everything except today), newest first
+    const pastKeys=Object.keys(J).filter(k=>k!==today && ((J[k].plan&&J[k].plan.trim())||(J[k].recap&&J[k].recap.trim()))).sort().reverse();
+    html+='<div class="jhist-title">History</div>';
+    if(pastKeys.length===0){
+      html+='<div class="jempty">No past entries yet. Today\u2019s notes will appear here tomorrow.</div>';
+    } else {
+      pastKeys.forEach(k=>{
+        const e=J[k];
+        const peek=((e.plan||"")+" "+(e.recap||"")).trim().slice(0,40);
+        html+='<div class="jday" data-day="'+k+'">'+
+          '<div class="jday-hdr"><span class="dt">'+prettyDate(k)+'</span><span class="pk">'+peek.replace(/</g,"&lt;")+'</span></div>'+
+          '<div class="jday-body">'+
+          (e.plan&&e.plan.trim()?'<div class="jday-sec"><div class="lbl">Plan</div><div class="txt">'+e.plan.replace(/</g,"&lt;")+'</div></div>':'')+
+          (e.recap&&e.recap.trim()?'<div class="jday-sec"><div class="lbl">Recap</div><div class="txt">'+e.recap.replace(/</g,"&lt;")+'</div></div>':'')+
+          '</div></div>';
+      });
+    }
+    wrap.innerHTML=html;
+    // wire today's textareas
+    const plan=document.getElementById('jPlan'), recap=document.getElementById('jRecap');
+    let pt, rt;
+    plan.oninput=()=>{ const o=loadJournal(); o[today]=o[today]||{}; o[today].plan=plan.value; saveJournal(o);
+      const sv=document.getElementById('jPlanSaved'); sv.textContent="saved"; clearTimeout(pt); pt=setTimeout(()=>sv.textContent="",1200); };
+    recap.oninput=()=>{ const o=loadJournal(); o[today]=o[today]||{}; o[today].recap=recap.value; saveJournal(o);
+      const sv=document.getElementById('jRecapSaved'); sv.textContent="saved"; clearTimeout(rt); rt=setTimeout(()=>sv.textContent="",1200); };
+    // wire history expand
+    wrap.querySelectorAll('.jday-hdr').forEach(h=>{
+      h.onclick=()=>{ h.parentElement.classList.toggle('open'); };
+    });
+  }
+
   document.querySelectorAll('#nav button').forEach(b=>{
     b.onclick = ()=>{
       document.querySelectorAll('#nav button').forEach(x=>x.classList.remove('active'));
       b.classList.add('active');
       const v=b.dataset.view;
-      const allv={home:homeView,training:document.getElementById('trainingView'),progress:progressView,docs:docsView};
+      const allv={home:homeView,training:document.getElementById('trainingView'),journal:document.getElementById('journalView'),progress:progressView,docs:docsView};
       Object.values(allv).forEach(el=>el.style.display='none');
       if(v==='home'){ homeView.style.display='block'; }
       else if(v==='training'){ document.getElementById('trainingView').style.display='block'; renderTraining(); }
+      else if(v==='journal'){ document.getElementById('journalView').style.display='block'; renderJournal(); }
       else if(v==='progress'){ progressView.style.display='block'; renderProgress(); }
       else { docsView.style.display='block'; renderDocList(); }
     };
