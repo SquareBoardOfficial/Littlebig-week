@@ -132,6 +132,21 @@
   .m-gate .gc{font-size:.82rem;color:var(--ink);line-height:1.45}
   .m-gate .gw{font-size:.74rem;color:#7a6a55;font-style:italic;margin-top:5px}
   .m-disc{font-size:.7rem;color:#7a6a55;font-style:italic;text-align:center;padding:10px 14px;line-height:1.4}
+  .calc-mode{display:flex;gap:6px;padding:12px 15px 6px}
+  .calc-mode button{flex:1;border:2px solid var(--line);background:#fff;color:var(--brown);border-radius:9px;padding:7px 4px;font-weight:700;font-size:.74rem;font-family:inherit;cursor:pointer}
+  .calc-mode button.on{background:var(--brown);color:#fff;border-color:var(--brown)}
+  .calc-pre{display:flex;flex-wrap:wrap;gap:6px;padding:4px 15px 10px}
+  .calc-pre button{border:1px solid var(--line);background:var(--cream);color:var(--brown);border-radius:16px;padding:5px 10px;font-size:.7rem;font-weight:600;font-family:inherit;cursor:pointer}
+  .calc-pre button:hover{border-color:var(--orange)}
+  .calc-field{padding:6px 15px}
+  .calc-field label{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--brown);font-weight:700;margin-bottom:4px}
+  .calc-field input{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px;font-family:inherit;font-size:.95rem;color:var(--ink);background:var(--cream)}
+  .calc-out{margin:12px 15px;background:var(--brown);color:#fff;border-radius:12px;padding:14px}
+  .calc-out .big{font-size:1.5rem;font-weight:800;line-height:1.1}
+  .calc-out .big.warn{color:#FFB4A2}
+  .calc-out .lbl{font-size:.74rem;color:var(--yellow);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+  .calc-out .sub{font-size:.82rem;margin-top:8px;line-height:1.45;color:#F3E4CC}
+  .calc-out .sub b{color:#fff}
   .jtoday{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:18px}
   .jdate{font-size:.78rem;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
   .jfield{margin-bottom:14px}
@@ -848,6 +863,7 @@
     h+=moneySection('plan','The plan, in order', planHTML(), true);
     h+=moneySection('cuts','Cut list \u2014 check off as you cancel', cutsHTML(), false);
     h+=moneySection('payoff','Payoff order (avalanche)', payoffHTML(), false);
+    h+=moneySection('calc','Payoff calculator \u2014 how much to pay', calcHTML(), false);
     h+=moneySection('gates','Growth gates \u2014 when is it safe?', gatesHTML(), false);
     h+=moneySection('debts','Debt tracker \u2014 check off when cleared', debtsHTML(), false);
     h+='<div class="m-disc">An organized read of your own statements \u2014 not licensed financial, tax, or legal advice. Confirm tax/entity questions with a CPA, especially before launching the new businesses.</div>';
@@ -856,7 +872,113 @@
     w.querySelectorAll('.m-sec-hd').forEach(hd=>{ hd.onclick=()=>hd.parentElement.classList.toggle('open'); });
     // wire checkboxes
     w.querySelectorAll('.m-row[data-k]').forEach(r=>{ r.onclick=()=>{ const k=r.getAttribute('data-k'); mqSet(k,!mq(k)); renderMoney(); }; });
+    wireCalc();
   }
+
+  // ---- Payoff calculator ----
+  let calcMode = "zero"; // "zero" = 0% deadline card, "apr" = high-APR card
+  function calcHTML(){
+    return '<div class="calc-mode">'+
+        '<button data-cm="zero" class="'+(calcMode==="zero"?"on":"")+'">0% card (beat the deadline)</button>'+
+        '<button data-cm="apr" class="'+(calcMode==="apr"?"on":"")+'">High-APR card</button>'+
+      '</div>'+
+      '<div class="calc-pre" id="calcPre"></div>'+
+      '<div id="calcFields"></div>'+
+      '<div id="calcOut"></div>';
+  }
+  function presetsFor(mode){
+    if(mode==="zero") return [
+      {n:"Wells Fargo", bal:"17850", date:"2027-02-01"},
+      {n:"Discover 0%", bal:"5041", date:"2026-12-03"}
+    ];
+    return [
+      {n:"AmEx Platinum", bal:"6845", apr:"27.5", pay:"500"},
+      {n:"Chase Ink", bal:"7013", apr:"20.7", pay:"300"},
+      {n:"Discover purch.", bal:"2000", apr:"24.5", pay:"300"}
+    ];
+  }
+  function wireCalc(){
+    const pre=document.getElementById('calcPre');
+    if(!pre) return;
+    // mode buttons
+    document.querySelectorAll('.calc-mode button').forEach(btn=>{
+      btn.onclick=()=>{ calcMode=btn.getAttribute('data-cm');
+        document.querySelectorAll('.calc-mode button').forEach(x=>x.classList.toggle('on', x.getAttribute('data-cm')===calcMode));
+        drawCalcFields(); };
+    });
+    drawCalcFields();
+  }
+  function drawCalcFields(){
+    const pre=document.getElementById('calcPre');
+    const fields=document.getElementById('calcFields');
+    const out=document.getElementById('calcOut');
+    if(!pre||!fields) return;
+    // presets
+    pre.innerHTML='';
+    presetsFor(calcMode).forEach(p=>{
+      const b=document.createElement('button'); b.textContent=p.n;
+      b.onclick=()=>{
+        if(calcMode==="zero"){ setVal('cBal',p.bal); setVal('cDate',p.date); }
+        else { setVal('cBal',p.bal); setVal('cApr',p.apr); setVal('cPay',p.pay); }
+        computeCalc();
+      };
+      pre.appendChild(b);
+    });
+    // fields
+    if(calcMode==="zero"){
+      fields.innerHTML=
+        fld('cBal','Balance on the 0% card ($)','number','e.g. 17850')+
+        fld('cDate','Promo ends (date it reverts)','date','');
+    } else {
+      fields.innerHTML=
+        fld('cBal','Balance ($)','number','e.g. 6845')+
+        fld('cApr','APR (%)','number','e.g. 27.5')+
+        fld('cPay','You can pay per month ($)','number','e.g. 500');
+    }
+    fields.querySelectorAll('input').forEach(inp=>{ inp.oninput=computeCalc; });
+    out.innerHTML='';
+  }
+  function fld(id,label,type,ph){
+    return '<div class="calc-field"><label>'+label+'</label><input id="'+id+'" type="'+type+'" inputmode="'+(type==="number"?"decimal":"")+'" placeholder="'+ph+'"></div>';
+  }
+  function setVal(id,v){ const e=document.getElementById(id); if(e) e.value=v; }
+  function getNum(id){ const e=document.getElementById(id); return e?parseFloat(e.value):NaN; }
+  function monthsUntil(iso){
+    if(!iso) return NaN;
+    const t=new Date(iso+"T00:00:00"), n=new Date(); n.setHours(0,0,0,0);
+    return (t-n)/86400000/30.44;
+  }
+  function computeCalc(){
+    const out=document.getElementById('calcOut');
+    if(!out) return;
+    if(calcMode==="zero"){
+      const bal=getNum('cBal'), mo=monthsUntil(document.getElementById('cDate')?document.getElementById('cDate').value:"");
+      if(isNaN(bal)||isNaN(mo)){ out.innerHTML=''; return; }
+      if(mo<=0){ out.innerHTML='<div class="calc-out"><div class="lbl">Heads up</div><div class="big warn">Deadline passed</div><div class="sub">This balance may already be at the high rate. Pay it down fast.</div></div>'; return; }
+      const pay=bal/mo;
+      out.innerHTML='<div class="calc-out"><div class="lbl">Pay this every month to clear it in time</div>'+
+        '<div class="big">$'+Math.ceil(pay).toLocaleString()+'/mo</div>'+
+        '<div class="sub">About <b>'+Math.floor(mo)+' months</b> left. At this rate the balance hits $0 right before it reverts \u2014 so no interest ever hits. Pay <b>more</b> than this and you finish early with breathing room.</div></div>';
+    } else {
+      const bal=getNum('cBal'), apr=getNum('cApr'), pay=getNum('cPay');
+      if(isNaN(bal)||isNaN(apr)||isNaN(pay)){ out.innerHTML=''; return; }
+      const r=apr/100/12;
+      const minInterest=bal*r;
+      if(pay<=minInterest){
+        out.innerHTML='<div class="calc-out"><div class="lbl">Warning</div><div class="big warn">Never pays off</div>'+
+          '<div class="sub">At $'+pay.toFixed(0)+'/mo you\u2019re barely covering the ~$'+minInterest.toFixed(0)+'/mo in interest. The balance won\u2019t shrink. Pay more than <b>$'+Math.ceil(minInterest)+'</b> just to start making progress.</div></div>';
+        return;
+      }
+      // months to payoff: n = -ln(1 - r*B/P)/ln(1+r)
+      const n=-Math.log(1-r*bal/pay)/Math.log(1+r);
+      const totalPaid=pay*n;
+      const interest=totalPaid-bal;
+      out.innerHTML='<div class="calc-out"><div class="lbl">At $'+pay.toFixed(0)+'/mo this card is gone in</div>'+
+        '<div class="big">'+Math.ceil(n)+' months</div>'+
+        '<div class="sub">You\u2019ll pay about <b>$'+Math.round(interest).toLocaleString()+'</b> in interest along the way. Every extra $100/mo cuts months off and saves interest \u2014 try bumping the payment to see.</div></div>';
+    }
+  }
+
   function moneySection(id,title,inner,open){
     return '<div class="m-sec'+(open?' open':'')+'"><div class="m-sec-hd"><span class="t">'+title+'</span><span class="chev">&#9662;</span></div>'+
       '<div class="m-sec-body">'+inner+'</div></div>';
