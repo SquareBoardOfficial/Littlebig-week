@@ -132,6 +132,20 @@
   .m-gate .gc{font-size:.82rem;color:var(--ink);line-height:1.45}
   .m-gate .gw{font-size:.74rem;color:#7a6a55;font-style:italic;margin-top:5px}
   .m-disc{font-size:.7rem;color:#7a6a55;font-style:italic;text-align:center;padding:10px 14px;line-height:1.4}
+  .cush{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:13px}
+  .cush .ct{font-weight:800;color:var(--brown);font-size:.95rem;margin-bottom:3px}
+  .cush .cs{font-size:.78rem;color:#7a6a55;margin-bottom:12px;line-height:1.4}
+  .cush-bar{height:26px;background:var(--cream);border-radius:13px;overflow:hidden;border:1px solid var(--line);position:relative}
+  .cush-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:13px 0 0 13px;transition:width .4s;min-width:2px}
+  .cush-pct{position:absolute;top:0;left:0;right:0;height:100%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;color:var(--brown)}
+  .cush-nums{display:flex;justify-content:space-between;margin-top:8px;font-size:.82rem}
+  .cush-nums .have{color:var(--brown);font-weight:700}
+  .cush-nums .goal{color:#7a6a55}
+  .cush-in{display:flex;gap:8px;align-items:center;margin-top:13px}
+  .cush-in label{font-size:.74rem;color:var(--brown);font-weight:700;white-space:nowrap}
+  .cush-in input{flex:1;border:1px solid var(--line);border-radius:8px;padding:9px;font-family:inherit;font-size:.95rem;background:var(--cream);color:var(--ink)}
+  .cush-done{margin-top:11px;background:var(--teal);color:#fff;border-radius:9px;padding:10px 12px;font-size:.84rem;font-weight:700;text-align:center}
+  .cush-msg{margin-top:10px;font-size:.8rem;color:#7a6a55;line-height:1.45;font-style:italic}
   .calc-mode{display:flex;gap:6px;padding:12px 15px 6px}
   .calc-mode button{flex:1;border:2px solid var(--line);background:#fff;color:var(--brown);border-radius:9px;padding:7px 4px;font-weight:700;font-size:.74rem;font-family:inherit;cursor:pointer}
   .calc-mode button.on{background:var(--brown);color:#fff;border-color:var(--brown)}
@@ -860,6 +874,8 @@
       h+='<div class="m-deadline"><div class="dl"><b>'+d.label+'</b><br>'+d.sub+'</div>'+
         '<div class="dn">'+txt+'<small>'+(dd<0?'reverted':'days left')+'</small></div></div>';
     });
+    // cushion tracker (phase one — prominent, above the collapsibles)
+    h+=cushionHTML();
     // collapsible sections
     h+=moneySection('plan','The plan, in order', planHTML(), true);
     h+=moneySection('cuts','Cut list \u2014 check off as you cancel', cutsHTML(), false);
@@ -874,6 +890,68 @@
     // wire checkboxes
     w.querySelectorAll('.m-row[data-k]').forEach(r=>{ r.onclick=()=>{ const k=r.getAttribute('data-k'); mqSet(k,!mq(k)); renderMoney(); }; });
     wireCalc();
+    wireCushion();
+  }
+
+  // ---- Cushion tracker ----
+  const CUSHION_GOAL = 9000;
+  function cushionAmt(){ try{ const v=parseFloat(localStorage.getItem("littlebig_cushion")); return isNaN(v)?0:v; }catch(e){ return 0; } }
+  function cushionHTML(){
+    const have=cushionAmt(), goal=CUSHION_GOAL;
+    const pct=Math.max(0,Math.min(100, Math.round(have/goal*100)));
+    const full=have>=goal;
+    let h='<div class="cush"><div class="ct">Cushion \u2014 your anti-underwater fund</div>'+
+      '<div class="cs">Goal: one slow month (~$'+goal.toLocaleString()+') in your Chase business savings. Fill this FIRST \u2014 it\u2019s what ends the drowning feeling.</div>';
+    h+='<div class="cush-bar"><div class="cush-fill" style="width:'+pct+'%"></div><div class="cush-pct">'+pct+'%</div></div>';
+    h+='<div class="cush-nums"><span class="have">$'+Math.round(have).toLocaleString()+' saved</span><span class="goal">of $'+goal.toLocaleString()+'</span></div>';
+    if(full){
+      h+='<div class="cush-done">\u2713 Cushion full \u2014 now redirect surplus to the AmEx Platinum (27.5%).</div>';
+    } else {
+      const left=goal-have;
+      h+='<div class="cush-msg">$'+Math.round(left).toLocaleString()+' to go. At ~$500/mo that\u2019s about '+Math.ceil(left/500)+' months \u2014 faster in a strong month. Keep cards at minimums until this is full.</div>';
+    }
+    h+='<div class="cush-in"><label>Update balance $</label><input id="cushInput" type="number" inputmode="decimal" placeholder="'+Math.round(have)+'" value="'+(have?Math.round(have):"")+'"></div>';
+    h+='</div>';
+    return h;
+  }
+  function wireCushion(){
+    const inp=document.getElementById('cushInput');
+    if(!inp) return;
+    let t;
+    inp.oninput=()=>{
+      const v=parseFloat(inp.value);
+      try{ localStorage.setItem("littlebig_cushion", isNaN(v)?"0":String(v)); }catch(e){}
+      // debounce the visual refresh so typing isn't interrupted
+      clearTimeout(t);
+      t=setTimeout(()=>{
+        const have=isNaN(v)?0:v, goal=CUSHION_GOAL;
+        const pct=Math.max(0,Math.min(100,Math.round(have/goal*100)));
+        const fill=document.querySelector('.cush-fill'), pctEl=document.querySelector('.cush-pct'), haveEl=document.querySelector('.cush-nums .have');
+        if(fill) fill.style.width=pct+'%';
+        if(pctEl) pctEl.textContent=pct+'%';
+        if(haveEl) haveEl.textContent='$'+Math.round(have).toLocaleString()+' saved';
+        // swap the message between "to go" and "full" if we crossed the goal
+        const card=document.querySelector('.cush');
+        const hasDone=!!card.querySelector('.cush-done');
+        const hasMsg=!!card.querySelector('.cush-msg');
+        const full=have>=goal;
+        if(full && !hasDone){
+          if(hasMsg) card.querySelector('.cush-msg').remove();
+          const d=document.createElement('div'); d.className='cush-done';
+          d.textContent='\u2713 Cushion full \u2014 now redirect surplus to the AmEx Platinum (27.5%).';
+          card.querySelector('.cush-nums').after(d);
+        } else if(!full && hasDone){
+          card.querySelector('.cush-done').remove();
+          const left=goal-have;
+          const m=document.createElement('div'); m.className='cush-msg';
+          m.textContent='$'+Math.round(left).toLocaleString()+' to go. At ~$500/mo that\u2019s about '+Math.ceil(left/500)+' months \u2014 faster in a strong month. Keep cards at minimums until this is full.';
+          card.querySelector('.cush-nums').after(m);
+        } else if(!full && hasMsg){
+          const left=goal-have;
+          card.querySelector('.cush-msg').textContent='$'+Math.round(left).toLocaleString()+' to go. At ~$500/mo that\u2019s about '+Math.ceil(left/500)+' months \u2014 faster in a strong month. Keep cards at minimums until this is full.';
+        }
+      },150);
+    };
   }
 
   // ---- Payoff calculator ----
