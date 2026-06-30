@@ -86,10 +86,52 @@
   footer{text-align:center; font-size:.7rem; color:var(--brown); margin-top:16px; padding-top:14px; border-top:2px solid var(--yellow)}
   footer i{color:var(--orange)}
 
-  .nav{display:flex;gap:5px;margin-bottom:16px}
-  .nav button{flex:1;border:none;background:#fff;border:2px solid var(--line);color:var(--brown);
-    border-radius:10px;padding:8px 1px;cursor:pointer;font-weight:700;font-size:.66rem;font-family:inherit;transition:all .15s}
+  .nav{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+  .nav button{flex:1 1 0;min-width:0;border:none;background:#fff;border:2px solid var(--line);color:var(--brown);
+    border-radius:9px;padding:8px 1px;cursor:pointer;font-weight:700;font-size:.6rem;font-family:inherit;transition:all .15s}
   .nav button.active{background:var(--brown);color:#fff;border-color:var(--brown)}
+  .m-banner{background:var(--brown);color:#fff;border-radius:14px;padding:15px 16px;margin-bottom:14px}
+  .m-banner .h{font-size:1.05rem;font-weight:800;margin-bottom:5px}
+  .m-banner .s{font-size:.85rem;line-height:1.5;color:var(--yellow)}
+  .m-banner .s b{color:#fff}
+  .m-sec{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:13px;overflow:hidden}
+  .m-sec-hd{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;cursor:pointer;user-select:none;background:var(--cream)}
+  .m-sec-hd .t{font-weight:800;color:var(--brown);font-size:.95rem}
+  .m-sec-hd .chev{color:var(--orange);font-size:1.1rem;transition:transform .2s}
+  .m-sec.open .m-sec-hd .chev{transform:rotate(180deg)}
+  .m-sec-body{display:none;padding:6px 0}
+  .m-sec.open .m-sec-body{display:block}
+  .m-phase{padding:10px 15px;border-bottom:1px solid var(--cream)}
+  .m-phase:last-child{border-bottom:none}
+  .m-phase .ph{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:var(--orange);margin-bottom:6px}
+  .m-step{display:flex;gap:10px;align-items:flex-start;padding:7px 0;font-size:.86rem;line-height:1.4}
+  .m-step .n{flex:none;width:20px;height:20px;border-radius:50%;background:var(--brown);color:#fff;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .m-step .x{color:var(--ink)}
+  .m-step .x b{color:var(--brown)}
+  .m-row{display:flex;align-items:flex-start;gap:11px;padding:11px 15px;border-bottom:1px solid var(--cream);cursor:pointer;user-select:none}
+  .m-row:last-child{border-bottom:none}
+  .m-cb{flex:none;width:21px;height:21px;border-radius:6px;border:2px solid var(--orange);margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;transition:all .15s}
+  .m-row.done .m-cb{background:var(--orange);border-color:var(--orange)}
+  .m-row .ml{font-size:.86rem;line-height:1.4;color:var(--ink)}
+  .m-row.done .ml{text-decoration:line-through;opacity:.5}
+  .m-row .ml .amt{font-weight:700;color:var(--brown)}
+  .m-row .ml .vd{display:inline-block;font-size:.62rem;font-weight:700;text-transform:uppercase;padding:1px 6px;border-radius:10px;margin-left:5px;vertical-align:middle}
+  .vd-cut{background:#C0392B;color:#fff}.vd-review{background:var(--yellow);color:var(--brown)}.vd-yours{background:#5B7FB4;color:#fff}.vd-keep{background:#3E7D5A;color:#fff}
+  .m-row .note{font-size:.74rem;color:#7a6a55;margin-top:2px}
+  .m-pay{padding:12px 15px;border-bottom:1px solid var(--cream)}
+  .m-pay:last-child{border-bottom:none}
+  .m-pay .pt{font-weight:700;color:var(--brown);font-size:.9rem}
+  .m-pay .pr{font-size:.78rem;color:#7a6a55;margin-top:2px}
+  .m-deadline{display:flex;justify-content:space-between;align-items:center;background:var(--cream);border-radius:10px;padding:11px 13px;margin:8px 15px}
+  .m-deadline .dl{font-size:.84rem;color:var(--ink)}.m-deadline .dl b{color:var(--brown)}
+  .m-deadline .dn{font-size:1.2rem;font-weight:800;color:#C0392B;text-align:right;line-height:1}
+  .m-deadline .dn small{display:block;font-size:.6rem;font-weight:400;color:#7a6a55;text-transform:uppercase}
+  .m-gate{padding:12px 15px;border-bottom:1px solid var(--cream)}
+  .m-gate:last-child{border-bottom:none}
+  .m-gate .gt{font-weight:800;color:var(--brown);font-size:.9rem;margin-bottom:5px}
+  .m-gate .gc{font-size:.82rem;color:var(--ink);line-height:1.45}
+  .m-gate .gw{font-size:.74rem;color:#7a6a55;font-style:italic;margin-top:5px}
+  .m-disc{font-size:.7rem;color:#7a6a55;font-style:italic;text-align:center;padding:10px 14px;line-height:1.4}
   .jtoday{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:18px}
   .jdate{font-size:.78rem;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
   .jfield{margin-bottom:14px}
@@ -184,6 +226,7 @@
   <button data-view="home" class="active">Today</button>
   <button data-view="training">Training</button>
   <button data-view="journal">Journal</button>
+  <button data-view="money">Money</button>
   <button data-view="progress">Progress</button>
   <button data-view="docs">My Plan Docs</button>
 </div>
@@ -224,6 +267,9 @@
 </div>
 <div id="journalView" style="display:none">
   <div id="journalWrap"></div>
+</div>
+<div id="moneyView" style="display:none">
+  <div id="moneyWrap"></div>
 </div>
 <div id="progressView" style="display:none">
   <div id="ganttWrap"></div>
@@ -734,16 +780,143 @@
     });
   }
 
+  // ===================== MONEY TAB =====================
+  const MONEY = {
+    banner:{ h:"You are not drowning.", s:"The problem isn't debt \u2014 it's that income swings (~$8k slow to ~$17k strong) while costs stay flat. A slow month runs ~-$5,100 even with one employee. The fix is a <b>cushion</b>, built before anything else." },
+    deadlines:[
+      { label:"Discover 0% transfer", sub:"$5,041 reverts to ~24.5%", date:"2026-12-03" },
+      { label:"Wells Fargo 0% transfer", sub:"$17,850 reverts to ~25-29%", date:"2027-02-01" }
+    ],
+    phases:[
+      { ph:"This week \u2014 stop the bleeding", steps:[
+        "Pause Vanguard ($500) + cancel Lakeridge ($231). ~$731/mo freed.",
+        "Set ALL business cards to autopay the minimum (protects your 785 FICO).",
+        "Open a separate business savings account, name it \u2018Cushion\u2019.",
+        "Write down both 0% deadlines (below \u2014 the only debt clocks that matter)." ]},
+      { ph:"Months 1\u20132 \u2014 build the cushion FIRST", steps:[
+        "Sweep surplus into Cushion until it holds ~$9,000 (one slow-month gap).",
+        "Pay yourself ONE fixed draw (~$4,000) on the 1st \u2014 no random pulls.",
+        "Keep all debt at minimums for now \u2014 cushion is priority #1." ]},
+      { ph:"Months 2\u20135 \u2014 kill high-APR cards (avalanche)", steps:[
+        "Once cushion is full, throw all surplus at AmEx Biz Platinum (27.5%, ~$6,845).",
+        "Then Discover purchase portion (~$2,000 @ 24.5%), then Chase Ink (20.7%).",
+        "Then clear the two 0% balances before their dates (~$1,000/mo each)." ]},
+      { ph:"Months 3\u20136 \u2014 grow, only when gates open", steps:[
+        "Fund the REPAIR SHOP first (<$10k, from cushion/profit \u2014 never cards).",
+        "Add HIRE #2 when Growth Gates conditions are met (~3\u20134 mo if strong).",
+        "Launch the TACO STAND last, from profit only." ]}
+    ],
+    cuts:[
+      { item:"Vanguard auto-invest", amt:"$500/mo", vd:"cut", note:"Don't invest at 7% while owing 27%. Pause, resume later." },
+      { item:"Lakeridge Athletic Club", amt:"$231/mo", vd:"cut", note:"$2,770/yr. You already have Planet Fitness." },
+      { item:"PayPal subscriptions", amt:"~$15/mo", vd:"review", note:"Two recurring charges. Trim unused." },
+      { item:"Recurring Venmo", amt:"~$197/mo", vd:"review", note:"Identify who/what before cutting." },
+      { item:"Planet Fitness", amt:"$25/mo", vd:"keep", note:"Keep this OR Lakeridge, not both." },
+      { item:"Cassandra Necoechea", amt:"~$205/mo", vd:"yours", note:"Looks like family support/childcare \u2014 your call." },
+      { item:"Children International", amt:"$41/mo", vd:"yours", note:"Child sponsorship \u2014 values call." },
+      { item:"Transfers to your other accts", amt:"~$138/mo", vd:"review", note:"Confirm if useful or drifting." }
+    ],
+    payoff:[
+      { t:"1. AmEx Biz Platinum", r:"27.5% \u00b7 ~$6,845 \u2014 the most expensive dollar you owe. First target." },
+      { t:"2. Discover (purchase portion)", r:"24.5% \u00b7 ~$2,000 \u2014 small + high-rate = quick win." },
+      { t:"3. Chase Ink", r:"20.7% \u00b7 ~$7,013 \u2014 last of the high-APR cards." },
+      { t:"Then: the two 0% balances", r:"Clear before their deadlines below (~$1,000/mo each)." },
+      { t:"Leave alone", r:"Cat, John Deere, truck, Western, Working Solutions \u2014 low fixed rates. Don't prepay." }
+    ],
+    gates:[
+      { gt:"Repair shop (fund first)", gc:"Cushion at ~$9k \u00b7 launch cost <$10k from savings NOT cards \u00b7 AmEx Platinum falling.", gw:"Counter-cyclical \u2014 busy when rentals are slow, so it reduces your risk. Fund earliest." },
+      { gt:"Hire #2", gc:"Cushion full \u00b7 3 straight months above ~$21k (OR cards cleared) \u00b7 work genuinely needs the hours.", gw:"Adds ~$3,900/mo. A slow month with 2 employees is ~-$9k \u2014 the cushion must cover that." },
+      { gt:"Taco stand (last)", gc:"Everything above stable \u00b7 funded from profit not cards \u00b7 worker-operator deal in writing.", gw:"Speculative, run by someone else on your money. Lowest priority." }
+    ]
+  };
+  function mq(k){ try{ return localStorage.getItem("littlebig_money_"+k)==="1"; }catch(e){ return false; } }
+  function mqSet(k,v){ try{ localStorage.setItem("littlebig_money_"+k, v?"1":"0"); }catch(e){} }
+  function moneyDays(iso){ const t=new Date(iso+"T00:00:00"); const n=new Date(); n.setHours(0,0,0,0); return Math.round((t-n)/86400000); }
+
+  function renderMoney(){
+    const w=document.getElementById('moneyWrap');
+    let h='';
+    h+='<div class="m-banner"><div class="h">'+MONEY.banner.h+'</div><div class="s">'+MONEY.banner.s+'</div></div>';
+    // deadlines (always visible, they're the urgent clocks)
+    MONEY.deadlines.forEach(d=>{
+      const dd=moneyDays(d.date);
+      const txt = dd<0 ? "PASSED" : dd;
+      h+='<div class="m-deadline"><div class="dl"><b>'+d.label+'</b><br>'+d.sub+'</div>'+
+        '<div class="dn">'+txt+'<small>'+(dd<0?'reverted':'days left')+'</small></div></div>';
+    });
+    // collapsible sections
+    h+=moneySection('plan','The plan, in order', planHTML(), true);
+    h+=moneySection('cuts','Cut list \u2014 check off as you cancel', cutsHTML(), false);
+    h+=moneySection('payoff','Payoff order (avalanche)', payoffHTML(), false);
+    h+=moneySection('gates','Growth gates \u2014 when is it safe?', gatesHTML(), false);
+    h+=moneySection('debts','Debt tracker \u2014 check off when cleared', debtsHTML(), false);
+    h+='<div class="m-disc">An organized read of your own statements \u2014 not licensed financial, tax, or legal advice. Confirm tax/entity questions with a CPA, especially before launching the new businesses.</div>';
+    w.innerHTML=h;
+    // wire collapsibles
+    w.querySelectorAll('.m-sec-hd').forEach(hd=>{ hd.onclick=()=>hd.parentElement.classList.toggle('open'); });
+    // wire checkboxes
+    w.querySelectorAll('.m-row[data-k]').forEach(r=>{ r.onclick=()=>{ const k=r.getAttribute('data-k'); mqSet(k,!mq(k)); renderMoney(); }; });
+  }
+  function moneySection(id,title,inner,open){
+    return '<div class="m-sec'+(open?' open':'')+'"><div class="m-sec-hd"><span class="t">'+title+'</span><span class="chev">&#9662;</span></div>'+
+      '<div class="m-sec-body">'+inner+'</div></div>';
+  }
+  function planHTML(){
+    let h='';
+    MONEY.phases.forEach(p=>{
+      h+='<div class="m-phase"><div class="ph">'+p.ph+'</div>';
+      p.steps.forEach((s,i)=>{ h+='<div class="m-step"><span class="n">'+(i+1)+'</span><span class="x">'+s+'</span></div>'; });
+      h+='</div>';
+    });
+    return h;
+  }
+  function cutsHTML(){
+    let h='';
+    MONEY.cuts.forEach((c,i)=>{
+      const k='cut'+i, done=mq(k)?' done':'';
+      h+='<div class="m-row'+done+'" data-k="'+k+'"><div class="m-cb">'+(mq(k)?'\u2713':'')+'</div>'+
+        '<div class="ml"><span class="amt">'+c.amt+'</span> '+c.item+'<span class="vd vd-'+c.vd+'">'+c.vd+'</span>'+
+        '<div class="note">'+c.note+'</div></div></div>';
+    });
+    return h;
+  }
+  function payoffHTML(){
+    let h='';
+    MONEY.payoff.forEach(p=>{ h+='<div class="m-pay"><div class="pt">'+p.t+'</div><div class="pr">'+p.r+'</div></div>'; });
+    return h;
+  }
+  function gatesHTML(){
+    let h='';
+    MONEY.gates.forEach(g=>{ h+='<div class="m-gate"><div class="gt">'+g.gt+'</div><div class="gc">'+g.gc+'</div><div class="gw">'+g.gw+'</div></div>'; });
+    return h;
+  }
+  function debtsHTML(){
+    const debts=[
+      "AmEx Biz Platinum (27.5%) \u2014 cleared",
+      "Discover purchase portion (24.5%) \u2014 cleared",
+      "Chase Ink (20.7%) \u2014 cleared",
+      "Discover 0% transfer \u2014 cleared before Dec 3",
+      "Wells Fargo 0% transfer \u2014 cleared before reverts"
+    ];
+    let h='';
+    debts.forEach((d,i)=>{
+      const k='debt'+i, done=mq(k)?' done':'';
+      h+='<div class="m-row'+done+'" data-k="'+k+'"><div class="m-cb">'+(mq(k)?'\u2713':'')+'</div><div class="ml">'+d+'</div></div>';
+    });
+    return h;
+  }
+
   document.querySelectorAll('#nav button').forEach(b=>{
     b.onclick = ()=>{
       document.querySelectorAll('#nav button').forEach(x=>x.classList.remove('active'));
       b.classList.add('active');
       const v=b.dataset.view;
-      const allv={home:homeView,training:document.getElementById('trainingView'),journal:document.getElementById('journalView'),progress:progressView,docs:docsView};
+      const allv={home:homeView,training:document.getElementById('trainingView'),journal:document.getElementById('journalView'),money:document.getElementById('moneyView'),progress:progressView,docs:docsView};
       Object.values(allv).forEach(el=>el.style.display='none');
       if(v==='home'){ homeView.style.display='block'; }
       else if(v==='training'){ document.getElementById('trainingView').style.display='block'; renderTraining(); }
       else if(v==='journal'){ document.getElementById('journalView').style.display='block'; renderJournal(); }
+      else if(v==='money'){ document.getElementById('moneyView').style.display='block'; renderMoney(); }
       else if(v==='progress'){ progressView.style.display='block'; renderProgress(); }
       else { docsView.style.display='block'; renderDocList(); }
     };
