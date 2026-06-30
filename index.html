@@ -442,6 +442,13 @@
       }
       return it;
     });
+    // Money routine — surfaces only on the right days
+    const _now=new Date(), _dom=_now.getDate(), _dow=_now.getDay();
+    if(_dom===1){
+      pmItems.push({p:"life",k:"Monthly money review (30 min)",d:"Pay yourself the fixed draw. Update the Cushion number in the Money tab. Check the two 0% deadlines \u2014 on pace? Strong or slow month? Size next month off your worst, not your best."});
+    } else if(_dow===5){
+      pmItems.push({p:"life",k:"Money check (15 min)",d:"Glance at business checking + this week\u2019s deposits. Minimums covered, nothing bounced? Sweep anything above your buffer into Cushion (or the AmEx once Cushion is full)."});
+    }
     pmItems.forEach((it,i)=>checklist.appendChild(row(it,"pm"+i)));
     const all=[...amItems.map((_,i)=>"am"+size+i), ...pmItems.map((_,i)=>"pm"+i)];
     const done=all.filter(k=>state[k]).length;
