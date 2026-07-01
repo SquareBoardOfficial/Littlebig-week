@@ -132,6 +132,20 @@
   .m-gate .gc{font-size:.82rem;color:var(--ink);line-height:1.45}
   .m-gate .gw{font-size:.74rem;color:#7a6a55;font-style:italic;margin-top:5px}
   .m-disc{font-size:.7rem;color:#7a6a55;font-style:italic;text-align:center;padding:10px 14px;line-height:1.4}
+  .bud-note{font-size:.8rem;color:#7a6a55;padding:12px 15px 6px;line-height:1.45}
+  .bud-result{margin:8px 15px;border-radius:12px;padding:14px}
+  .bud-result.ok{background:var(--teal);color:#fff}
+  .bud-result.bad{background:#C0392B;color:#fff}
+  .bud-big{font-size:1.6rem;font-weight:800;line-height:1}
+  .bud-sub{font-size:.83rem;margin-top:7px;line-height:1.45;opacity:.95}
+  .bud-io{font-size:.74rem;margin-top:8px;opacity:.8;font-weight:600}
+  .bud-group{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:var(--orange);padding:12px 15px 4px}
+  .bud-row{display:flex;align-items:center;justify-content:space-between;padding:6px 15px;gap:10px}
+  .bud-row label{font-size:.84rem;color:var(--ink);flex:1}
+  .bud-in{display:flex;align-items:center;gap:3px;flex:none}
+  .bud-in span{color:#7a6a55;font-size:.9rem}
+  .bud-in input{width:82px;border:1px solid var(--line);border-radius:7px;padding:7px 8px;font-family:inherit;font-size:.9rem;color:var(--ink);background:var(--cream);text-align:right}
+  .bud-reset{text-align:center;color:var(--orange);font-size:.8rem;font-weight:700;padding:14px;cursor:pointer}
   .cush{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:13px}
   .cush .ct{font-weight:800;color:var(--brown);font-size:.95rem;margin-bottom:3px}
   .cush .cs{font-size:.78rem;color:#7a6a55;margin-bottom:12px;line-height:1.4}
@@ -818,32 +832,32 @@
 
   // ===================== MONEY TAB =====================
   const MONEY = {
-    banner:{ h:"You are not drowning.", s:"The problem isn't debt \u2014 it's that income swings (~$8k slow to ~$17k strong) while costs stay flat. A slow month runs ~-$5,100 even with one employee. The fix is a <b>cushion</b>, built before anything else." },
+    banner:{ h:"The real problem, named.", s:"Your debt is mostly fine (fixed equipment loans). The squeeze is that your life costs ~$4,700+/mo but the business only clears that in a <b>strong</b> month. Fix = predictable draw + more rental income. Cuts alone can\u2019t close the gap." },
     deadlines:[
       { label:"Discover 0% transfer", sub:"$5,041 reverts to ~24.5%", date:"2026-12-03" },
       { label:"Wells Fargo 0% transfer", sub:"$17,850 reverts to ~25-29%", date:"2027-02-01" }
     ],
     phases:[
-      { ph:"This week \u2014 stop the bleeding", steps:[
-        "Pause Vanguard ($500/mo) \u2014 done. The single biggest safe win.",
-        "Set ALL business cards to autopay the minimum (protects your 785 FICO).",
-        "Open a separate business savings account, name it \u2018Cushion\u2019.",
-        "Write down both 0% deadlines (below \u2014 the only debt clocks that matter)." ]},
-      { ph:"Months 1\u20132 \u2014 build the cushion FIRST", steps:[
-        "Sweep surplus into Cushion until it holds ~$9,000 (one slow-month gap).",
-        "Pay yourself ONE fixed draw (~$4,000) on the 1st \u2014 no random pulls.",
-        "Keep all debt at minimums for now \u2014 cushion is priority #1." ]},
-      { ph:"Months 2\u20135 \u2014 kill high-APR cards (avalanche)", steps:[
-        "Once cushion is full, throw all surplus at AmEx Biz Platinum (27.5%, ~$6,845).",
-        "Then Discover purchase portion (~$2,000 @ 24.5%), then Chase Ink (20.7%).",
-        "Then clear the two 0% balances before their dates (~$1,000/mo each)." ]},
-      { ph:"Months 3\u20136 \u2014 grow, only when gates open", steps:[
-        "Fund the REPAIR SHOP first (<$10k, from cushion/profit \u2014 never cards).",
-        "Add HIRE #2 when Growth Gates conditions are met (~3\u20134 mo if strong).",
-        "Launch the TACO STAND last, from profit only." ]}
+      { ph:"This week \u2014 make the money visible", steps:[
+        "Switch to ONE fixed draw on the 1st \u2014 no mid-month $2k pulls. This is the keystone.",
+        "Set the draw to your REAL number (test it in the Budget section above \u2014 $4k likely doesn\u2019t hold).",
+        "Keep the $500 cushion transfer PAUSED while months run negative.",
+        "Set all business cards to autopay the minimum (protects your 785 FICO)." ]},
+      { ph:"Now \u2014 close the monthly gap (the real fix)", steps:[
+        "Get idle machines rented \u2014 call past customers first. Income is the lever, not cuts.",
+        "Work out which machine actually earns its payment; a dead-weight machine is a sell/refi candidate.",
+        "Trim the easy subscription waste (streaming, Dropbox dup) \u2014 helps at the margin, won\u2019t close the gap alone." ]},
+      { ph:"Once consistently cash-positive \u2014 small buffer", steps:[
+        "Build a starter buffer (~$2,000) from real surplus only \u2014 never from a tight account.",
+        "Grow it toward one slow month (~$9k) only after the gap is reliably closed.",
+        "Keep high-APR cards at minimums until the buffer + breakeven are solid." ]},
+      { ph:"Later \u2014 debt payoff, then growth", steps:[
+        "Then attack cards: AmEx Platinum (27.5%) \u2192 Discover \u2192 Chase Ink. Clear 0% balances before their dates.",
+        "Repair shop before hire #2 (counter-cyclical). Both from profit, never cards.",
+        "Taco stand last. Talk to a CPA before launching either as a real entity." ]}
     ],
     cuts:[
-      { item:"Vanguard auto-invest", amt:"$500/mo", vd:"cut", note:"Don't invest at 7% while owing 27%. Pause, resume later." },
+      { item:"Vanguard auto-invest", amt:"$500/mo", vd:"keep", note:"DONE \u2014 already paused. Resume only once you\u2019re debt-free + cash-positive." },
       { item:"Lakeridge Athletic Club", amt:"$231/mo ($126 net)", vd:"keep", note:"KEEP \u2014 Steve pays half (~$105), so your net is ~$126. Where you swim + train for the triathlon." },
       { item:"PayPal subscriptions", amt:"~$15/mo", vd:"review", note:"Two recurring charges. Trim unused." },
       { item:"Yard maintenance (Venmo)", amt:"$180/mo", vd:"keep", note:"KEEP \u2014 recurring yard service. Legit expense." },
@@ -883,8 +897,10 @@
     });
     // cushion tracker (phase one — prominent, above the collapsibles)
     h+=cushionHTML();
+    // budget tester (flexible — test draw vs personal costs)
+    h+=moneySection('budget','Personal budget \u2014 does your draw hold?', budgetHTML(), true);
     // collapsible sections
-    h+=moneySection('plan','The plan, in order', planHTML(), true);
+    h+=moneySection('plan','The plan, in order', planHTML(), false);
     h+=moneySection('cuts','Cut list \u2014 check off as you cancel', cutsHTML(), false);
     h+=moneySection('payoff','Payoff order (avalanche)', payoffHTML(), false);
     h+=moneySection('calc','Payoff calculator \u2014 how much to pay', calcHTML(), false);
@@ -898,24 +914,100 @@
     w.querySelectorAll('.m-row[data-k]').forEach(r=>{ r.onclick=()=>{ const k=r.getAttribute('data-k'); mqSet(k,!mq(k)); renderMoney(); }; });
     wireCalc();
     wireCushion();
+    wireBudget();
   }
 
+  // ---- Personal budget tester ----
+  const BUDGET_ITEMS = [
+    {k:"draw",label:"Business draw (your pay)",def:4000,inc:true},
+    {k:"steve",label:"Steve \u2014 Lakeridge share (in)",def:105,inc:true},
+    {k:"housing",label:"Housing (rent/mortgage)",def:2600,inc:false},
+    {k:"food",label:"Groceries + gas + phone",def:750,inc:false},
+    {k:"pge",label:"PG&E",def:337,inc:false},
+    {k:"everbright",label:"Everbright (solar)",def:199,inc:false},
+    {k:"cassandra",label:"Cassandra (family)",def:205,inc:false},
+    {k:"yard",label:"Yard maintenance",def:180,inc:false},
+    {k:"transfers",label:"Transfers to own accts",def:138,inc:false},
+    {k:"lakeridge",label:"Lakeridge gym (full)",def:231,inc:false},
+    {k:"water",label:"EBMUD (water)",def:59,inc:false},
+    {k:"trash",label:"Republic (trash)",def:54,inc:false},
+    {k:"children",label:"Children International",def:41,inc:false},
+    {k:"apple",label:"Apple",def:28,inc:false},
+    {k:"netflix",label:"Netflix",def:27,inc:false},
+    {k:"pfitness",label:"Planet Fitness",def:25,inc:false},
+    {k:"spotify",label:"Spotify",def:22,inc:false},
+    {k:"comcast",label:"Comcast (internet)",def:15,inc:false},
+    {k:"paypal",label:"PayPal subs",def:15,inc:false},
+    {k:"paramount",label:"Paramount+",def:14,inc:false}
+  ];
+  function budGet(k){
+    try{ const v=localStorage.getItem("littlebig_bud_"+k); if(v!==null) return v; }catch(e){}
+    const it=BUDGET_ITEMS.find(x=>x.k===k); return it?String(it.def):"0";
+  }
+  function budSet(k,v){ try{ localStorage.setItem("littlebig_bud_"+k, v); }catch(e){} }
+  function budgetHTML(){
+    let income=0, expense=0;
+    BUDGET_ITEMS.forEach(it=>{ const v=parseFloat(budGet(it.k))||0; if(it.inc) income+=v; else expense+=v; });
+    const net=income-expense;
+    let h='<div class="bud-note">Edit any number \u2014 it recalculates live. Cut what you\u2019re willing to, adjust the draw, and watch whether you land in the black. This is the honest test of whether $4k holds.</div>';
+    // result banner
+    h+='<div class="bud-result '+(net>=0?"ok":"bad")+'" id="budResult">'+budResultText(income,expense,net)+'</div>';
+    // income fields
+    h+='<div class="bud-group">Money in</div>';
+    BUDGET_ITEMS.filter(x=>x.inc).forEach(it=>{ h+=budRow(it); });
+    h+='<div class="bud-group">Money out</div>';
+    BUDGET_ITEMS.filter(x=>!x.inc).forEach(it=>{ h+=budRow(it); });
+    h+='<div class="bud-reset" id="budReset">Reset to my real numbers</div>';
+    return h;
+  }
+  function budRow(it){
+    return '<div class="bud-row"><label>'+it.label+'</label>'+
+      '<div class="bud-in"><span>$</span><input data-bk="'+it.k+'" type="number" inputmode="decimal" value="'+budGet(it.k)+'"></div></div>';
+  }
+  function budResultText(income,expense,net){
+    const sign=net>=0?"+":"\u2212";
+    const mag=Math.abs(Math.round(net)).toLocaleString();
+    let msg;
+    if(net>=300) msg="This holds \u2014 you\u2019ve got breathing room. Take the draw once monthly and don\u2019t reach back into the business.";
+    else if(net>=0) msg="This barely holds. It works on paper but leaves no margin \u2014 one surprise puts you under. Aim for a bit more cushion.";
+    else msg="This doesn\u2019t hold. You\u2019re short $"+mag+"/mo, which is exactly what forces the mid-month business pulls. Either the draw rises or income does \u2014 cuts alone can\u2019t close this.";
+    return '<div class="bud-big">'+sign+'$'+mag+'/mo</div><div class="bud-sub">'+msg+'</div>'+
+      '<div class="bud-io">In $'+Math.round(income).toLocaleString()+' \u00b7 Out $'+Math.round(expense).toLocaleString()+'</div>';
+  }
+  function wireBudget(){
+    const wrap=document.querySelector('.m-sec .bud-note');
+    if(!wrap) return;
+    document.querySelectorAll('input[data-bk]').forEach(inp=>{
+      inp.oninput=()=>{
+        budSet(inp.getAttribute('data-bk'), inp.value);
+        let income=0, expense=0;
+        BUDGET_ITEMS.forEach(it=>{ const v=parseFloat(budGet(it.k))||0; if(it.inc) income+=v; else expense+=v; });
+        const net=income-expense;
+        const res=document.getElementById('budResult');
+        if(res){ res.className='bud-result '+(net>=0?"ok":"bad"); res.innerHTML=budResultText(income,expense,net); }
+      };
+    });
+    const rst=document.getElementById('budReset');
+    if(rst) rst.onclick=()=>{ BUDGET_ITEMS.forEach(it=>budSet(it.k,String(it.def))); renderMoney(); };
+  }
+
+
   // ---- Cushion tracker ----
-  const CUSHION_GOAL = 9000;
+  const CUSHION_GOAL = 2000;
   function cushionAmt(){ try{ const v=parseFloat(localStorage.getItem("littlebig_cushion")); return isNaN(v)?0:v; }catch(e){ return 0; } }
   function cushionHTML(){
     const have=cushionAmt(), goal=CUSHION_GOAL;
     const pct=Math.max(0,Math.min(100, Math.round(have/goal*100)));
     const full=have>=goal;
-    let h='<div class="cush"><div class="ct">Cushion \u2014 your anti-underwater fund</div>'+
-      '<div class="cs">Goal: one slow month (~$'+goal.toLocaleString()+') in your Chase business savings. Fill this FIRST \u2014 it\u2019s what ends the drowning feeling.</div>';
+    let h='<div class="cush"><div class="ct">Cushion \u2014 a starter buffer</div>'+
+      '<div class="cs">Start small: a $'+goal.toLocaleString()+' buffer, only from real surplus in a strong month. A big cushion comes later \u2014 first close the monthly gap (fix the draw, grow rental income). Don\u2019t save into this while a month is running negative.</div>';
     h+='<div class="cush-bar"><div class="cush-fill" style="width:'+pct+'%"></div><div class="cush-pct">'+pct+'%</div></div>';
     h+='<div class="cush-nums"><span class="have">$'+Math.round(have).toLocaleString()+' saved</span><span class="goal">of $'+goal.toLocaleString()+'</span></div>';
     if(full){
-      h+='<div class="cush-done">\u2713 Cushion full \u2014 now redirect surplus to the AmEx Platinum (27.5%).</div>';
+      h+='<div class="cush-done">\u2713 Starter buffer built. Grow it toward one slow month (~$9k) only once you\u2019re consistently cash-positive.</div>';
     } else {
       const left=goal-have;
-      h+='<div class="cush-msg">$'+Math.round(left).toLocaleString()+' to go. At ~$500/mo that\u2019s about '+Math.ceil(left/500)+' months \u2014 faster in a strong month. Keep cards at minimums until this is full.</div>';
+      h+='<div class="cush-msg">$'+Math.round(left).toLocaleString()+' to a starter buffer. Only add from a strong-month surplus \u2014 never by pulling from a tight account.</div>';
     }
     h+='<div class="cush-in"><label>Update balance $</label><input id="cushInput" type="number" inputmode="decimal" placeholder="'+Math.round(have)+'" value="'+(have?Math.round(have):"")+'"></div>';
     h+='</div>';
